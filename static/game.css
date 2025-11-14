@@ -1,0 +1,169 @@
+/* ===========================
+   GLOBAL PAGE STYLING
+=========================== */
+body {
+    background: linear-gradient(to bottom, #1a1a2e, #16213e);
+    color: #e0e0e0;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-align: center;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* ===========================
+   STARFIELD BACKGROUND
+=========================== */
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.stationary-star {
+    position: absolute;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    animation: twinkle 5s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.8; }
+}
+
+/* ===========================
+   GENERAL LAYOUT
+=========================== */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ===========================
+   SCOREBOARD
+=========================== */
+.player-scores {
+    display: flex;
+    justify-content: space-around;
+    width: 360px;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+}
+
+.player-score {
+    padding: 8px 14px;
+    border-radius: 10px;
+    color: white;
+    min-width:120px;
+}
+
+#player1-score { background-color: red; }
+#player2-score { background-color: blue; }
+
+/* ===========================
+   TURN INDICATOR
+=========================== */
+h2 {
+    color: #f0a500;
+    text-shadow: 0 0 8px rgba(240, 165, 0, 0.7);
+    margin: 6px 0;
+}
+
+/* ===========================
+   GRID STYLING
+=========================== */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-gap: 6px;
+    justify-content: center;
+    margin-top: 16px;
+
+    border: 2px solid #f0a500;
+    border-radius: 8px;
+    padding: 8px;
+    background: rgba(0,0,0,0.06);
+}
+
+.grid-cell {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(240, 165, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    box-sizing: border-box;
+    overflow: visible;
+    border-radius:6px;
+}
+
+/* ===========================
+   ORBS
+=========================== */
+.orb-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.orb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    transition: all 0.18s ease;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2) inset;
+}
+
+.moving-orb {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    z-index: 50;
+
+    transition: transform 0.45s cubic-bezier(.25,.85,.25,1);
+    transform-origin: center center;
+    will-change: transform;
+    pointer-events: none;
+}
+
+/* ===========================
+   WINNER MESSAGE
+=========================== */
+#winner-message {
+    display: none;
+    margin-top: 20px;
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+button#reset-btn {
+    background: transparent;
+    color: #f0a500;
+    border: 2px solid #f0a500;
+    padding: 10px 16px;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+}
+button#reset-btn:hover {
+    background: #f0a500;
+    color: #16213e;
+}

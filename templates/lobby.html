@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chain Reaction - Lobby</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top, #0d0d1a, #000);
+            overflow: hidden;
+            color: white;
+        }
+
+        /* --- Starfield Background --- */
+
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .stationary-star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: twinkle 4s infinite ease-in-out alternate;
+        }
+
+        @keyframes twinkle {
+            from { opacity: 0.3; }
+            to { opacity: 0.9; }
+        }
+
+        .moving-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: moveStar linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes moveStar {
+            from { transform: translateY(-10vh); }
+            to { transform: translateY(110vh); }
+        }
+
+        /* --- Main Container --- */
+
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        h2 {
+            margin: 10px 0 20px;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        h3 {
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .lobby-options {
+            display: grid;
+            gap: 25px;
+        }
+
+        .lobby-options div {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.09);
+            border-radius: 14px;
+            backdrop-filter: blur(6px);
+            transition: 0.3s ease;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .lobby-options div:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.15);
+        }
+
+        input[type="text"] {
+            width: 85%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 12px 28px;
+            background: #0077ff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            color: white;
+            transition: 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 119, 255, 0.4);
+        }
+
+        button:hover {
+            background: #005fcc;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="stars"></div>
+
+    <div class="container">
+        <h1>Welcome, {{ username }}!</h1>
+        <h2>Game Lobby</h2>
+
+        <div class="lobby-options">
+            <div class="play-ai">
+                <h3>Single Player</h3>
+                <form action="/play_ai" method="post">
+                    <button type="submit">Play Against AI</button>
+                </form>
+            </div>
+
+            <div class="join-game">
+                <h3>Join Game</h3>
+                <form action="/join" method="post">
+                    <input type="text" name="room_code" placeholder="Enter Room Code" required>
+                    <button type="submit">Join</button>
+                </form>
+            </div>
+
+            <div class="create-room">
+                <h3>Create Room</h3>
+                <form action="/create" method="post">
+                    <button type="submit">Create New Game</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const starsContainer = document.querySelector('.stars');
+
+        // Stationary Stars
+        for (let i = 0; i < 180; i++) {
+            const star = document.createElement('div');
+            star.classList.add('stationary-star');
+            star.style.top = `${Math.random() * 100}vh`;
+            star.style.left = `${Math.random() * 100}vw`;
+            const size = Math.random() * 2 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            starsContainer.appendChild(star);
+        }
+
+        // Slow Moving Stars (Professional)
+        for (let i = 0; i < 40; i++) {
+            const star = document.createElement('div');
+            star.classList.add('moving-star');
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.animationDuration = `${4 + Math.random() * 6}s`;
+            star.style.opacity = `${0.3 + Math.random() * 0.5}`;
+            starsContainer.appendChild(star);
+        }
+    </script>
+
+</body>
+</html>

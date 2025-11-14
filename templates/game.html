@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Chain Reaction - Single Player</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='game.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="stars"></div>
+
+    <div class="container">
+        <div class="player-scores">
+            <div id="player1-score" class="player-score">Player 1: 0</div>
+            <div id="player2-score" class="player-score">AI: 0</div>
+        </div>
+
+        <h2 id="turn-indicator">Player 1's Turn (Red)</h2>
+
+        <!-- game board -->
+        <div class="grid-container"></div>
+
+        <div id="winner-message" class="winner"></div>
+        <div class="controls" style="margin-top:12px;">
+            <button id="reset-btn" type="button">New Game</button>
+        </div>
+    </div>
+
+    <!-- Main Game Script -->
+    <script src="{{ url_for('static', filename='game.js') }}"></script>
+</body>
+</html>
