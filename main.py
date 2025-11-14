@@ -2,7 +2,7 @@ import os
 import secrets
 from flask import Flask, render_template, request, redirect, url_for, session
 
-app = Flask(__name__, static_folder='static', template_folder='templates')
+app = Flask(__name__, static_folder='static')
 app.secret_key = os.urandom(24)
 
 # In-memory storage for rooms

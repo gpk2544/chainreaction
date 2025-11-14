@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chain Reaction - Room</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top, #0d0d1a, #000);
+            overflow: hidden;
+            color: white;
+        }
+
+        /* --- Background Stars --- */
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .stationary-star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: twinkle 4s infinite ease-in-out alternate;
+        }
+
+        @keyframes twinkle {
+            from { opacity: 0.3; }
+            to { opacity: 0.9; }
+        }
+
+        .moving-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: moveStar linear infinite;
+            opacity: 0.5;
+        }
+
+        @keyframes moveStar {
+            from { transform: translateY(-10vh); }
+            to { transform: translateY(120vh); }
+        }
+
+        /* --- Main UI Box --- */
+        .container {
+            max-width: 650px;
+            margin: 80px auto;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 18px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 25px rgba(0,0,0,0.45);
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            margin-bottom: 8px;
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        h2 {
+            margin: 20px 0 12px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 25px;
+        }
+
+        ul li {
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            margin: 8px 0;
+            border-radius: 10px;
+            backdrop-filter: blur(3px);
+            font-size: 16px;
+        }
+
+        p {
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 12px 28px;
+            font-size: 16px;
+            border: none;
+            background: #0077ff;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 0 10px rgba(0,119,255,0.4);
+        }
+
+        button:hover {
+            background: #0063d1;
+            transform: translateY(-2px);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="stars"></div>
+
+    <div class="container">
+        <h1>Room Code: {{ room_code }}</h1>
+        <h2>Players in Room</h2>
+
+        <ul>
+            {% for player in room.players %}
+                <li>
+                    {{ player }}
+                    {% if player == room.host %}
+                        (Host)
+                    {% elif player in room.ready_players %}
+                        (Ready)
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if username != room.host and username not in room.ready_players %}
+            <form action="/ready/{{ room_code }}" method="post">
+                <button type="submit">Ready</button>
+            </form>
+        {% endif %}
+
+        {% if username == room.host and all_ready %}
+            <form action="/start/{{ room_code }}" method="post">
+                <button type="submit">Start Game</button>
+            </form>
+        {% elif username == room.host %}
+            <p>Waiting for all players to be ready...</p>
+        {% endif %}
+    </div>
+
+    <script>
+        const starsContainer = document.querySelector('.stars');
+
+        // Stationary stars
+        for (let i = 0; i < 160; i++) {
+            const star = document.createElement('div');
+            star.classList.add('stationary-star');
+            star.style.top = `${Math.random() * 100}vh`;
+            star.style.left = `${Math.random() * 100}vw`;
+            const size = Math.random() * 2 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            starsContainer.appendChild(star);
+        }
+
+        // Slow moving stars
+        for (let i = 0; i < 45; i++) {
+            const star = document.createElement('div');
+            star.classList.add('moving-star');
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.animationDuration = `${4 + Math.random() * 7}s`;
+            star.style.opacity = `${0.3 + Math.random() * 0.6}`;
+            starsContainer.appendChild(star);
+        }
+
+        // Auto page refresh for player updates
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
+    </script>
+
+</body>
+</html>

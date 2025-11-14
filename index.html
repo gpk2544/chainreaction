@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chain Reaction</title>
+
+    <!-- Modern Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===============================
+           GLOBAL PAGE STYLE
+        =============================== */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at center, #111829, #02040a 80%);
+            color: #fff;
+            text-align: center;
+            height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            /* Slight blur for premium look */
+            backdrop-filter: blur(2px);
+        }
+
+        .container {
+            z-index: 10;
+            padding: 40px 60px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+
+            animation: fadeUp 1s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #ffffff;
+            letter-spacing: 1px;
+
+            text-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        input {
+            padding: 12px 20px;
+            width: 270px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(4px);
+
+            transition: 0.3s;
+        }
+
+        input::placeholder {
+            color: #c5c5c5;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+        button {
+            padding: 12px 25px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #4f8cff, #6d4bff);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+
+            box-shadow: 0 5px 20px rgba(79, 140, 255, 0.3);
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 140, 255, 0.4);
+        }
+
+        .mute-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .mute-btn img {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* ===============================
+           STARFIELD
+        =============================== */
+        .stars, .moving-stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: twinkle 4s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .moving-star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: drift 12s linear infinite;
+        }
+
+        @keyframes drift {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-100vw); }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- STAR LAYERS -->
+    <div class="stars"></div>
+    <div class="moving-stars"></div>
+
+    <div class="container">
+        <h1>CHAIN REACTION</h1>
+        <form action="/lobby" method="post">
+            <input type="text" name="username" placeholder="Enter Your Name" required>
+            <br>
+            <button type="submit">Play</button>
+        </form>
+    </div>
+
+    <!-- Audio Files -->
+    <audio id="background-music" src="{{ url_for('static', filename='assets/background.mp3') }}" loop preload="auto"></audio>
+
+    <!-- Mute/Unmute Button -->
+    <div id="mute-btn" class="mute-btn">
+        <img id="mute-icon" src="{{ url_for('static', filename='assets/speaker.png') }}" alt="Mute">
+    </div>
+
+    <script>
+        /* Static Stars */
+        const starsCont = document.querySelector('.stars');
+        const movingStarsCont = document.querySelector('.moving-stars');
+
+        // Static stars
+        for (let i = 0; i < 140; i++) {
+            const s = document.createElement('div');
+            s.classList.add('star');
+            s.style.width = s.style.height = `${Math.random() * 2 + 1}px`;
+            s.style.top = `${Math.random() * 100}vh`;
+            s.style.left = `${Math.random() * 100}vw`;
+            starsCont.appendChild(s);
+        }
+
+        // Moving stars (parallax)
+        for (let i = 0; i < 60; i++) {
+            const s = document.createElement('div');
+            s.classList.add('moving-star');
+            s.style.width = s.style.height = `${Math.random() * 2 + 1}px`;
+            s.style.top = `${Math.random() * 100}vh`;
+            s.style.left = `${Math.random() * 100}vw`;
+            s.style.animationDuration = `${8 + Math.random() * 8}s`;
+            movingStarsCont.appendChild(s);
+        }
+
+        const backgroundMusic = document.getElementById('background-music');
+        const muteBtn = document.getElementById('mute-btn');
+        const muteIcon = document.getElementById('mute-icon');
+        let isMuted = false;
+
+        function playSound(sound) {
+            if (sound && !isMuted) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.error("Error playing sound:", e));
+            }
+        }
+
+        muteBtn?.addEventListener('click', () => {
+            isMuted = !isMuted;
+            backgroundMusic.muted = isMuted;
+            if (isMuted) {
+                muteIcon.src = "{{ url_for('static', filename='assets/speaker-muted.png') }}";
+            } else {
+                muteIcon.src = "{{ url_for('static', filename='assets/speaker.png') }}";
+                playSound(backgroundMusic);
+            }
+        });
+
+        // Autoplay background music
+        document.addEventListener('DOMContentLoaded', () => {
+            // Delay playback to ensure the page is fully loaded
+            setTimeout(() => {
+                playSound(backgroundMusic);
+            }, 100);
+        });
+    </script>
+
+</body>
+</html>
